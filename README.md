@@ -18,6 +18,55 @@ A library to remove from objects properties that match default values to minimiz
 ## usage
 
 ```ts
-import RemoveDefault from "remove-default";
+import { removeDefault } from "remove-default";
 // <script src="./node_modules/remove-default/remove-default.min.js"></script>
+
+const schema = {
+  type: 'object',
+  properties: {
+    padding: {
+      type: 'object',
+      properties: {
+        left: {
+          type: 'number',
+          default: 0
+        },
+        right: {
+          type: 'number',
+          default: 0
+        },
+        top: {
+          type: 'number',
+          default: 0
+        },
+        bottom: {
+          type: 'number',
+          default: 0
+        }
+      },
+      default: {}
+    }
+  }
+}
+expect(removeDefault({
+  padding: {
+    left: 0,
+    right: 10,
+    top: 0,
+    bottom: 0,
+  }
+}, schema)).toEqual({
+  padding: {
+    right: 10
+  }
+})
+
+expect(removeDefault({
+  padding: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  }
+}, schema)).toEqual({})
 ```
