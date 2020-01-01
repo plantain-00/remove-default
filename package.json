@@ -1,0 +1,43 @@
+{
+  "name": "remove-default",
+  "version": "0.0.1",
+  "description": "A library to remove from objects properties that match default values to minimize storage or payload.",
+  "main": "nodejs/index.js",
+  "repository": "https://github.com/plantain-00/remove-default.git",
+  "author": "York Yao",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@commitlint/cli": "8.2.0",
+    "@commitlint/config-conventional": "8.2.0",
+    "@microsoft/api-extractor": "7.7.0",
+    "@types/jasmine": "3.5.0",
+    "@typescript-eslint/eslint-plugin": "2.14.0",
+    "@typescript-eslint/parser": "2.14.0",
+    "clean-scripts": "1.12.1",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.9.0",
+    "eslint-plugin-plantain": "0.1.2",
+    "jasmine": "3.5.0",
+    "markdownlint-cli": "0.20.0",
+    "no-unused-export": "1.10.0",
+    "rimraf": "3.0.0",
+    "rollup": "1.27.14",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-uglify": "6.0.4",
+    "type-coverage": "2.3.1",
+    "typescript": "3.7.4"
+  },
+  "scripts": {
+    "build": "clean-scripts build",
+    "lint": "clean-scripts lint",
+    "test": "clean-scripts test",
+    "fix": "clean-scripts fix"
+  },
+  "module": "browser/index.js",
+  "unpkg": "remove-default.min.js",
+  "jsdelivr": "remove-default.min.js",
+  "typeCoverage": {
+    "atLeast": 100
+  }
+}
