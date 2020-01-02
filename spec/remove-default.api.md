@@ -5,7 +5,7 @@
 ```ts
 
 // @public (undocumented)
-export function removeDefault(target: unknown, schema: unknown): unknown;
+export function removeDefault<T = unknown>(target: T, schema: unknown): T | undefined;
 
 
 // (No @packageDocumentation comment for this package)

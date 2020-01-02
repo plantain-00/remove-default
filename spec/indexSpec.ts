@@ -90,7 +90,15 @@ it('remove padding', () => {
       }
     }
   }
-  expect(removeDefault({
+  interface Target {
+    padding?: {
+      left?: number
+      right?: number
+      top?: number
+      bottom?: number
+    }
+  }
+  expect(removeDefault<Target>({
     padding: {
       left: 0,
       right: 10,
@@ -103,7 +111,7 @@ it('remove padding', () => {
     }
   })
 
-  expect(removeDefault({
+  expect(removeDefault<Target>({
     padding: {
       left: 0,
       right: 0,

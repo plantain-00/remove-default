@@ -1,7 +1,7 @@
 /**
  * @public
  */
-export function removeDefault(target: unknown, schema: unknown) {
+export function removeDefault<T = unknown>(target: T, schema: unknown) {
   const jsonSchema = schema as JsonSchema
   const getReference = (name: string) => {
     if (jsonSchema.definitions) {
@@ -12,8 +12,8 @@ export function removeDefault(target: unknown, schema: unknown) {
   return removeDefaultInternally(target, jsonSchema, getReference)
 }
 
-function removeDefaultInternally(
-  target: unknown,
+function removeDefaultInternally<T>(
+  target: T,
   schema: JsonSchema,
   getReference: (name: string) => JsonSchema | undefined
 ) {
@@ -24,21 +24,23 @@ function removeDefaultInternally(
     }
   }
   if (schema.type === 'object' && schema.properties) {
+    const object = target as unknown as { [name: string]: unknown }
     for (const propertyName in schema.properties) {
       const property = schema.properties[propertyName]
-      const value = (target as { [name: string]: unknown })[propertyName]
+      const value = object[propertyName]
       const result = removeDefaultInternally(value, property, getReference)
       if (result === undefined) {
-        delete (target as { [name: string]: unknown })[propertyName]
+        delete object[propertyName]
       }
     }
   }
   if (schema.type === 'array' && Array.isArray(target)) {
-    for (let i = 0; i < target.length; i++) {
-      const item = target[i]
+    const array = target as unknown[]
+    for (let i = 0; i < array.length; i++) {
+      const item = array[i]
       const result = removeDefaultInternally(item, schema.items, getReference)
       if (result === undefined) {
-        target[i] = undefined
+        array[i] = undefined
       }
     }
   }

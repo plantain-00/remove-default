@@ -20,8 +20,8 @@ module.exports = {
     export: `no-unused-export ${tsFiles} --strict --need-module tslib`,
     commit: `commitlint --from=HEAD~1`,
     markdown: `markdownlint README.md`,
-    typeCoverage: 'type-coverage -p src/tsconfig.nodejs.json --strict',
-    typeCoverageBrowser: 'type-coverage -p src/tsconfig.browser.json --strict'
+    typeCoverage: 'type-coverage -p src/tsconfig.nodejs.json',
+    typeCoverageBrowser: 'type-coverage -p src/tsconfig.browser.json'
   },
   test: [
     'tsc -p spec',

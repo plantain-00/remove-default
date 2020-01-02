@@ -38,7 +38,7 @@
   "unpkg": "remove-default.min.js",
   "jsdelivr": "remove-default.min.js",
   "typeCoverage": {
-    "atLeast": 93.54
+    "atLeast": 100
   },
   "dependencies": {
     "tslib": "1"
