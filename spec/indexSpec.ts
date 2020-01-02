@@ -1,4 +1,4 @@
-import { removeDefault, JsonSchema } from '../src/index'
+import { removeDefault } from '../dist/nodejs/index'
 
 it('remove default array', () => {
   expect(removeDefault(
@@ -89,7 +89,7 @@ it('remove padding', () => {
         default: {}
       }
     }
-  } as JsonSchema
+  }
   expect(removeDefault({
     padding: {
       left: 0,
@@ -111,4 +111,47 @@ it('remove padding', () => {
       bottom: 0,
     }
   }, schema)).toEqual({})
+})
+
+it('support $ref', () => {
+  const schema = {
+    $ref: '#/definitions/entry',
+    definitions: {
+      entry: {
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/definitions/a'
+          },
+          b: {
+            $ref: '#/definitions/b'
+          }
+        },
+        default: {},
+      },
+      a: {
+        type: 'number',
+        default: 0
+      },
+      b: {
+        type: 'object',
+        properties: {
+          c: {
+            $ref: '#/definitions/c'
+          }
+        },
+        default: {}
+      },
+      c: {
+        type: 'string',
+        default: ''
+      }
+    }
+  }
+  expect(removeDefault({
+    a: 0,
+    b: {
+      c: '',
+    }
+  }, schema)).toEqual(undefined)
 })

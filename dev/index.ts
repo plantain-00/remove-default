@@ -7,8 +7,20 @@ const target = {
   }
 }
 const result = removeDefault(target, {
-  type: 'object',
-  properties: {
+  $ref: '#/definitions/entry',
+  definitions: {
+    entry: {
+      type: 'object',
+      properties: {
+        a: {
+          $ref: '#/definitions/a'
+        },
+        b: {
+          $ref: '#/definitions/b'
+        }
+      },
+      default: {},
+    },
     a: {
       type: 'number',
       default: 0
@@ -17,14 +29,16 @@ const result = removeDefault(target, {
       type: 'object',
       properties: {
         c: {
-          type: 'string',
-          default: ''
+          $ref: '#/definitions/c'
         }
       },
       default: {}
+    },
+    c: {
+      type: 'string',
+      default: ''
     }
-  },
-  default: {}
+  }
 })
 
 console.info(result)

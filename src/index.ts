@@ -1,12 +1,33 @@
 /**
  * @public
  */
-export function removeDefault(target: unknown, schema: JsonSchema) {
+export function removeDefault(target: unknown, schema: unknown) {
+  const jsonSchema = schema as JsonSchema
+  const getReference = (name: string) => {
+    if (jsonSchema.definitions) {
+      return jsonSchema.definitions[name.substring('#/definitions/'.length)]
+    }
+    return undefined
+  }
+  return removeDefaultInternally(target, jsonSchema, getReference)
+}
+
+function removeDefaultInternally(
+  target: unknown,
+  schema: JsonSchema,
+  getReference: (name: string) => JsonSchema | undefined
+) {
+  if (schema.$ref) {
+    const reference = getReference(schema.$ref)
+    if (reference) {
+      schema = reference
+    }
+  }
   if (schema.type === 'object' && schema.properties) {
     for (const propertyName in schema.properties) {
       const property = schema.properties[propertyName]
       const value = (target as { [name: string]: unknown })[propertyName]
-      const result = removeDefault(value, property)
+      const result = removeDefaultInternally(value, property, getReference)
       if (result === undefined) {
         delete (target as { [name: string]: unknown })[propertyName]
       }
@@ -15,7 +36,7 @@ export function removeDefault(target: unknown, schema: JsonSchema) {
   if (schema.type === 'array' && Array.isArray(target)) {
     for (let i = 0; i < target.length; i++) {
       const item = target[i]
-      const result = removeDefault(item, schema.items)
+      const result = removeDefaultInternally(item, schema.items, getReference)
       if (result === undefined) {
         target[i] = undefined
       }
@@ -73,30 +94,24 @@ function equals(value1: unknown, value2: unknown) {
   return true
 }
 
-/**
- * @public
- */
-export type JsonSchema = ObjectSchema | ArraySchema | PrimarySchema | ReferenceSchema
+type JsonSchema = ObjectSchema | ArraySchema | PrimarySchema
 
-interface ObjectSchema {
+interface CommonSchema {
+  default?: unknown
+  $ref?: string
+  definitions?: { [name: string]: JsonSchema }
+}
+
+interface ObjectSchema extends CommonSchema {
   type: 'object'
   properties: { [name: string]: JsonSchema }
-  default?: unknown
 }
 
-interface ArraySchema {
+interface ArraySchema extends CommonSchema {
   type: 'array'
   items: JsonSchema
-  default?: unknown
 }
 
-interface PrimarySchema {
-  type: 'number' | 'integer' | 'string' | 'boolean' | 'null'
-  default?: unknown
-}
-
-interface ReferenceSchema {
-  type: undefined,
-  $ref: string
-  definitions?: { [name: string]: JsonSchema }
+interface PrimarySchema extends CommonSchema {
+  type: 'number' | 'integer' | 'string' | 'boolean' | 'null' | undefined
 }

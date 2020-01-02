@@ -4,16 +4,8 @@
 
 ```ts
 
-// Warning: (ae-forgotten-export) The symbol "ObjectSchema" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ArraySchema" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "PrimarySchema" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ReferenceSchema" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type JsonSchema = ObjectSchema | ArraySchema | PrimarySchema | ReferenceSchema;
-
-// @public (undocumented)
-export function removeDefault(target: unknown, schema: JsonSchema): unknown;
+export function removeDefault(target: unknown, schema: unknown): unknown;
 
 
 // (No @packageDocumentation comment for this package)
