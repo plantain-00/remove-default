@@ -1,6 +1,6 @@
 {
   "name": "remove-default",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A library to remove from objects properties that match default values to minimize storage or payload.",
   "main": "nodejs/index.js",
   "repository": "https://github.com/plantain-00/remove-default.git",
