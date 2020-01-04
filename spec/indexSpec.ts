@@ -163,3 +163,61 @@ it('support $ref', () => {
     }
   }, schema)).toEqual(undefined)
 })
+
+it('support anyOf', () => {
+  const schema = {
+    $ref: '#/definitions/Content',
+    definitions: {
+      Content: {
+        anyOf: [
+          {
+            $ref: '#/definitions/TextContent'
+          },
+          {
+            $ref: '#/definitions/ImageContent'
+          }
+        ]
+      },
+      TextContent: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            const: 'text'
+          },
+          text: {
+            type: 'string'
+          },
+          rotate: {
+            type: 'number',
+            default: 0
+          }
+        }
+      },
+      ImageContent: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            const: 'image'
+          },
+          url: {
+            type: 'string'
+          }
+        }
+      }
+    }
+  }
+  expect(removeDefault<{
+    type: 'text',
+    text: string
+    rotate?: number
+  }>({
+    type: 'text',
+    text: 'a',
+    rotate: 0
+  }, schema)).toEqual({
+    type: 'text',
+    text: 'a'
+  })
+})

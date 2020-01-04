@@ -1,42 +1,50 @@
 import { removeDefault } from '../src/index'
 
 const target = {
-  a: 0,
-  b: {
-    c: '',
-  }
+  type: 'text',
+  text: 'a',
+  rotate: 0
 }
 const result = removeDefault(target, {
-  $ref: '#/definitions/entry',
+  $ref: '#/definitions/Content',
   definitions: {
-    entry: {
-      type: 'object',
-      properties: {
-        a: {
-          $ref: '#/definitions/a'
+    Content: {
+      anyOf: [
+        {
+          $ref: '#/definitions/TextContent'
         },
-        b: {
-          $ref: '#/definitions/b'
+        {
+          $ref: '#/definitions/ImageContent'
         }
-      },
-      default: {},
+      ]
     },
-    a: {
-      type: 'number',
-      default: 0
-    },
-    b: {
+    TextContent: {
       type: 'object',
       properties: {
-        c: {
-          $ref: '#/definitions/c'
+        type: {
+          type: 'string',
+          const: 'text'
+        },
+        text: {
+          type: 'string'
+        },
+        rotate: {
+          type: 'number',
+          default: 0
         }
-      },
-      default: {}
+      }
     },
-    c: {
-      type: 'string',
-      default: ''
+    ImageContent: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          const: 'image'
+        },
+        url: {
+          type: 'string'
+        }
+      }
     }
   }
 })

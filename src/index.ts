@@ -9,45 +9,76 @@ export function removeDefault<T = unknown>(target: T, schema: unknown) {
     }
     return undefined
   }
-  return removeDefaultInternally(target, jsonSchema, getReference)
+  return removeDefaultInternally(target, jsonSchema, getReference).result
 }
 
 function removeDefaultInternally<T>(
   target: T,
   schema: JsonSchema,
-  getReference: (name: string) => JsonSchema | undefined
-) {
+  getReference: (name: string) => JsonSchema | undefined,
+  match?: boolean,
+): { result?: T, matched?: boolean } {
   if (schema.$ref) {
     const reference = getReference(schema.$ref)
     if (reference) {
       schema = reference
     }
   }
+  if (schema.anyOf) {
+    for (const anyOf of schema.anyOf) {
+      const result = removeDefaultInternally(target, anyOf, getReference, true)
+      if (result.matched) {
+        return result
+      }
+    }
+  }
+  if (schema.oneOf) {
+    for (const oneOf of schema.oneOf) {
+      const result = removeDefaultInternally(target, oneOf, getReference, true)
+      if (result.matched) {
+        return result
+      }
+    }
+  }
   if (schema.type === 'object' && schema.properties) {
+    let matched = false
     const object = target as unknown as { [name: string]: unknown }
     for (const propertyName in schema.properties) {
       const property = schema.properties[propertyName]
       const value = object[propertyName]
-      const result = removeDefaultInternally(value, property, getReference)
+      if (match && property.const !== undefined) {
+        if (property.const == value) {
+          matched = true
+        } else {
+          return { matched: false }
+        }
+      }
+    }
+    if (match && !matched) {
+      return { matched: false }
+    }
+    for (const propertyName in schema.properties) {
+      const property = schema.properties[propertyName]
+      const value = object[propertyName]
+      const { result } = removeDefaultInternally(value, property, getReference)
       if (result === undefined) {
         delete object[propertyName]
       }
     }
-  }
-  if (schema.type === 'array' && Array.isArray(target)) {
+  } else if (schema.type === 'array' && Array.isArray(target)) {
     const array = target as unknown[]
     for (let i = 0; i < array.length; i++) {
       const item = array[i]
-      const result = removeDefaultInternally(item, schema.items, getReference)
+      const { result } = removeDefaultInternally(item, schema.items, getReference)
       if (result === undefined) {
         array[i] = undefined
       }
     }
   }
   if (schema.type && schema.default !== undefined && equals(target, schema.default)) {
-    return undefined
+    return { result: undefined }
   }
-  return target
+  return { result: target }
 }
 
 function equals(value1: unknown, value2: unknown) {
@@ -102,6 +133,9 @@ interface CommonSchema {
   default?: unknown
   $ref?: string
   definitions?: { [name: string]: JsonSchema }
+  anyOf?: JsonSchema[]
+  oneOf?: JsonSchema[]
+  const?: unknown
 }
 
 interface ObjectSchema extends CommonSchema {
