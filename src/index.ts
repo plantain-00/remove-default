@@ -113,13 +113,13 @@ function equals(value1: unknown, value2: unknown) {
     return false
   }
   const keys = new Set<string>()
-  for (const key in value1 as {}) {
+  for (const key in value1 as Record<string, unknown>) {
     if (!equals((value1 as { [name: string]: unknown })[key], (value2 as { [name: string]: unknown })[key])) {
       return false
     }
     keys.add(key)
   }
-  for (const key in value2 as {}) {
+  for (const key in value2 as Record<string, unknown>) {
     if ((value2 as { [name: string]: unknown })[key] !== undefined && !keys.has(key)) {
       return false
     }
