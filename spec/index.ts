@@ -1,7 +1,9 @@
-import { removeDefault } from '../dist/nodejs/index'
+import test from 'ava'
 
-it('remove default array', () => {
-  expect(removeDefault(
+import { removeDefault } from '../src'
+
+test('remove default array', (t) => {
+  t.is(removeDefault(
     {
       a: 0,
       b: []
@@ -29,11 +31,11 @@ it('remove default array', () => {
         }
       },
       default: {}
-    })).toEqual(undefined)
+    }), undefined)
 })
 
-it('remove default object', () => {
-  expect(removeDefault(
+test('remove default object', (t) => {
+  t.is(removeDefault(
     {
       a: 0,
       b: {
@@ -59,10 +61,10 @@ it('remove default object', () => {
         }
       },
       default: {}
-    })).toEqual(undefined)
+    }), undefined)
 })
 
-it('remove padding', () => {
+test('remove padding', (t) => {
   const schema = {
     type: 'object',
     properties: {
@@ -98,30 +100,30 @@ it('remove padding', () => {
       bottom?: number
     }
   }
-  expect(removeDefault<Target>({
+  t.deepEqual(removeDefault<Target>({
     padding: {
       left: 0,
       right: 10,
       top: 0,
       bottom: 0,
     }
-  }, schema)).toEqual({
+  }, schema), {
     padding: {
       right: 10
     }
   })
 
-  expect(removeDefault<Target>({
+  t.deepEqual(removeDefault<Target>({
     padding: {
       left: 0,
       right: 0,
       top: 0,
       bottom: 0,
     }
-  }, schema)).toEqual({})
+  }, schema), {})
 })
 
-it('support $ref', () => {
+test('support $ref', (t) => {
   const schema = {
     $ref: '#/definitions/entry',
     definitions: {
@@ -156,15 +158,15 @@ it('support $ref', () => {
       }
     }
   }
-  expect(removeDefault({
+  t.is(removeDefault({
     a: 0,
     b: {
       c: '',
     }
-  }, schema)).toEqual(undefined)
+  }, schema), undefined)
 })
 
-it('support anyOf', () => {
+test('support anyOf', (t) => {
   const schema = {
     $ref: '#/definitions/Content',
     definitions: {
@@ -208,7 +210,7 @@ it('support anyOf', () => {
       }
     }
   }
-  expect(removeDefault<{
+  t.deepEqual(removeDefault<{
     type: 'text',
     text: string
     rotate?: number
@@ -216,7 +218,7 @@ it('support anyOf', () => {
     type: 'text',
     text: 'a',
     rotate: 0
-  }, schema)).toEqual({
+  }, schema), {
     type: 'text',
     text: 'a'
   })
