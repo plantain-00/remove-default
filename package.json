@@ -8,8 +8,6 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "@commitlint/cli": "9.0.1",
-    "@commitlint/config-conventional": "9.0.1",
     "@microsoft/api-extractor": "7.8.15",
     "@rollup/plugin-node-resolve": "8.1.0",
     "@typescript-eslint/eslint-plugin": "3.4.0",
