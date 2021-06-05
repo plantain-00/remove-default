@@ -4,7 +4,6 @@ A library to remove from objects properties that match default values to minimiz
 
 [![Dependency Status](https://david-dm.org/plantain-00/remove-default.svg)](https://david-dm.org/plantain-00/remove-default)
 [![devDependency Status](https://david-dm.org/plantain-00/remove-default/dev-status.svg)](https://david-dm.org/plantain-00/remove-default#info=devDependencies)
-[![Build Status: Linux](https://travis-ci.org/plantain-00/remove-default.svg?branch=master)](https://travis-ci.org/plantain-00/remove-default)
 [![Build Status: Windows](https://ci.appveyor.com/api/projects/status/github/plantain-00/remove-default?branch=master&svg=true)](https://ci.appveyor.com/project/plantain-00/remove-default/branch/master)
 ![Github CI](https://github.com/plantain-00/remove-default/workflows/Github%20CI/badge.svg)
 [![npm version](https://badge.fury.io/js/remove-default.svg)](https://badge.fury.io/js/remove-default)
