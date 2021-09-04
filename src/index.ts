@@ -44,7 +44,7 @@ function removeDefaultInternally<T>(
     let matched = false
     const object = target as unknown as { [name: string]: unknown }
     for (const propertyName in schema.properties) {
-      const property = schema.properties[propertyName]
+      const property = schema.properties[propertyName]!
       const value = object[propertyName]
       if (match && property.const !== undefined) {
         if (property.const == value) {
@@ -58,7 +58,7 @@ function removeDefaultInternally<T>(
       return { matched: false }
     }
     for (const propertyName in schema.properties) {
-      const property = schema.properties[propertyName]
+      const property = schema.properties[propertyName]!
       const value = object[propertyName]
       const { result } = removeDefaultInternally(value, property, getReference)
       if (result === undefined) {
